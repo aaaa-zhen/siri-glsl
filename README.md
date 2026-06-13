@@ -11,8 +11,9 @@ Each demo is a single self-contained HTML file — no dependencies, just open it
 
 | Demo | 文件 | 说明 |
 |------|------|------|
-| 🌊 Siri Wave | [`siri-wave.html`](siri-wave.html) | 新版 Siri 声波 (siriWaveCore) 与流体圆点 (siriFluidDotsCore):光谱色散、Lorentzian 发光线、metaball + smin 平滑融合、欠阻尼弹簧动画 |
-| 🫧 Liquid Glass | [`liquid-glass.html`](liquid-glass.html) | QuartzCore `glass_background` 重建:透镜折射、色差、backdrop 模糊、黑顶镜面、赤道亮线,支持上传截图实时折射,所有参数可调 |
+| Siri Wave | [`siri-wave.html`](siri-wave.html) | 新版 Siri 声波 (siriWaveCore) 与流体圆点 (siriFluidDotsCore):光谱色散、Lorentzian 发光线、metaball + smin 平滑融合、欠阻尼弹簧动画 |
+| Liquid Glass | [`liquid-glass.html`](liquid-glass.html) | QuartzCore `glass_background` 重建:透镜折射、色差、backdrop 模糊、黑顶镜面、赤道亮线,支持上传截图实时折射,所有参数可调 |
+| Metaball → Search | [`metaball-search.html`](metaball-search.html) | iPadOS 从边缘拖拽唤醒搜索的复刻:梯度感知 smooth-min 融合(液滴从黑边渗出起液颈)、SDF 驱动玻璃折射(圆盘模糊 + 边缘渗光 + 细高光带)、CPU 弹簧驱动「圆 → 胶囊」连续形变,松手凝聚成黑玻璃搜索框。从顶部黑边往下拖即可 |
 
 ## 技术点 / Techniques
 
@@ -22,6 +23,9 @@ Each demo is a single self-contained HTML file — no dependencies, just open it
 - metaball SDF + smooth-min 流体融合
 - 欠阻尼弹簧 `1 − e^(−lt)·cos(wt)` 做自然回弹
 - 透镜位移场折射 + 两 pass 高斯模糊
+- 梯度感知 smooth-min:平滑半径随两表面梯度夹角缩放,起液颈不撑胖
+- supercircle (squircle) SDF:圆 / 胶囊 / 圆角矩形是同一原语的连续插值
+- 圆盘多抽样 + mip 联合模糊、距离场驱动的边缘渗光
 
 ## License
 
