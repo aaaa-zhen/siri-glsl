@@ -23,6 +23,14 @@
   #search svg{flex:none;color:#fff;opacity:.72;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))}
   #search .ic{margin-left:20px}
   #search .mic{margin-right:20px}
+  /* 手机:缩小字号与图标内边距,避免麦克风被裁 */
+  @media (max-width:600px){
+    #search input{font-size:16px;padding:0 8px}
+    #search .ic{margin-left:14px}
+    #search .mic{margin-right:14px}
+    #caret{height:19px}
+    #panel{width:100vw;border-left:none;border-top:1px solid #e2e2e6}
+  }
   #caret{position:absolute;width:2px;height:21px;top:50%;transform:translateY(-50%);
     border-radius:1px;background:#fff;display:none;pointer-events:none;
     box-shadow:0 0 5px rgba(255,255,255,.95),0 0 14px rgba(255,255,255,.5);
@@ -326,8 +334,11 @@ let state = 'IDLE';                    // IDLE | DRAG | CAPSULE | RETRACT
 let pointer = { x: 0, y: 0 };
 
 function capsuleRect(){
-  const w = Math.min(560, stage.clientWidth * 0.62), h = 56;
-  return { x: stage.clientWidth / 2, y: EDGE + 96, w, h };
+  const sw = stage.clientWidth;
+  // 手机:留固定 22px 边距,占满可用宽;桌面:62% 居中,封顶 560
+  const w = sw < 600 ? sw - 44 : Math.min(560, sw * 0.62);
+  const h = sw < 600 ? 50 : 56;
+  return { x: sw / 2, y: EDGE + (sw < 600 ? 70 : 96), w, h };
 }
 function setMorphSprings(){ for (const s of [sp.cx, sp.cy, sp.bx, sp.by]) s.set(P.om, P.ze); }
 
@@ -429,9 +440,11 @@ const mctx = document.createElement('canvas').getContext('2d');
 let caretBlinkReset = 0;
 function updateCaret(visible){
   if (!visible || document.activeElement !== searchInput) { caretEl.style.display = 'none'; return; }
-  mctx.font = getComputedStyle(searchInput).font;
+  const cs = getComputedStyle(searchInput);
+  mctx.font = cs.font;
+  const padL = parseFloat(cs.paddingLeft) || 0;        // 跟随响应式 padding
   const upto = searchInput.value.slice(0, searchInput.selectionStart ?? searchInput.value.length);
-  const x = searchInput.offsetLeft + 10 + mctx.measureText(upto).width;  // 10 = input 左 padding
+  const x = searchInput.offsetLeft + padL + mctx.measureText(upto).width;
   caretEl.style.left = Math.min(x, searchInput.offsetLeft + searchInput.offsetWidth - 12) + 'px';
   caretEl.style.display = 'block';
 }
